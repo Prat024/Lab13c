@@ -1,0 +1,46 @@
+Lab 13c - Spark SQL using Python
+
+1) Put Parquetfile on HDFS
+
+hdfs dfs -copyFromLocal /home/cloudera/Desktop/wiki_parquet /user/cloudera/parquet_input
+
+2) Enter Python Spark SHell
+
+cd /usr/lib/spark
+
+pyspark
+
+3) Create SQLContext
+
+>>> from pyspark.sql import SQLContext
+>>> sqlCon = SQLContext(sc)
+
+4) Load data from the Parquet format files
+
+wikiData = sqlCon.parquetFile("parquet_input")
+
+5) Find number of records in dataset
+
+wikiData.count()
+
+# Output:
+3944
+
+6) Run SQL queries by creating a table
+
+wikiData.registerAsTable("parquetwikitable")
+
+7) SQL operation for collection of Row objects
+
+result = sqlCon.sql("SELECT COUNT(*) AS pageCount FROM parquetwikitable").collect()
+
+8) Access the page count
+
+result[0].pageCount
+
+# Output:
+3944
+
+9) Bonus: Check for Out of Memory Error by restart
+
+.bin/spark-shell --driver-memory IG
